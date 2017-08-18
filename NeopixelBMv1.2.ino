@@ -5,10 +5,26 @@ Neopixel test using a WeMoS D1 ESP-8266 board and Node-RED on IBM Bluemix
 expects messages of the form: "#rrggbb" and sets the LEDs to that colour
 
 
-By Andy Stanford-Clark - with embellishments by Lucy Rogers
- May-Dec 2016
+By Andy Stanford-Clark - with embellishments by Lucy Rogers and a simple addition of Wifi connection Management by Tim Minter 
+*/
 
- /*
+// You will need to install the following libraries
+
+// "WiFiManager" (https://github.com/tzapu/WiFiManager)
+// "PubSubClient" (https://github.com/knolleary/pubsubclient)
+// "Adafruit NeoPixel" (https://github.com/adafruit/Adafruit_NeoPixel)
+
+// If the board is started, and a known wifi network is available, it will connect automatically. 
+// If no known network is found, the board will switch to access point mode and a wifi network will be created with the ACCESS_POINT_NAME set below. 
+// Using another device you can then connect to that wifi network using the ACCESS_POINT_PASSWORD set below.
+// Your browser will be opened to a configuration page where you can set up the wifi credentials for this board.
+
+
+// ACCESS_POINT_SETUP
+#define ACCESS_POINT_NAME "EnchantedConnection"
+#define ACCESS_POINT_PASSWORD "S3tMeUpNow"
+
+ /* 
  * Copyright 2016 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,13 +51,13 @@ By Andy Stanford-Clark - with embellishments by Lucy Rogers
 #include <PubSubClient.h>
 #include <Adafruit_NeoPixel.h>
 
+#include <DNSServer.h> //Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h> //Local WebServer used to serve the configuration portal
+#include <WiFiManager.h> //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+
 // remember to change MQTT_KEEPALIVE to 60 in the header file {arduino installation}/libraries/PubSubClient/src/PubsSubClient.h
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
-// Update these with values suitable for your network.
-const char* wifi_ssid = "****";
-const char* wifi_password = "****";
 
 // update this with the Broker address from IBM Watson IoT Platform
 #define BROKER "{org_id}.messaging.internetofthings.ibmcloud.com"
@@ -60,7 +76,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 //Change this if using different number of neopixels or different pin
-Adafruit_NeoPixel pixel = Adafruit_NeoPixel(8, 4); // eight pixels, on pin 4
+Adafruit_NeoPixel pixel = Adafruit_NeoPixel(1, 4); // eight pixels, on pin 4
 // pin 4 is "D2" on the WeMoS D1 mini
 
 
@@ -95,11 +111,10 @@ void setup_wifi() {
   
   // Start by connecting to the WiFi network   
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(wifi_ssid);
-
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(wifi_ssid, wifi_password);
+  Serial.print("Connecting to wifi or setting up access point");
+  
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("EnchantedSetup","S3tMeUpNow");
   
   wait_for_wifi();
   
@@ -242,7 +257,6 @@ void loop() {
   // service the MQTT client
   client.loop();
 }
-
 
 
 
