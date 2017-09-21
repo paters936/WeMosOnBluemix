@@ -8,21 +8,17 @@ expects messages of the form: "#rrggbb" and sets the LEDs to that colour
 By Andy Stanford-Clark - with embellishments by Lucy Rogers and a simple addition of Wifi connection Management by Tim Minter 
 */
 
-// You will need to install the following libraries
+// You will need to install the "WiFiManager" library by Tzapu via Library Manager.
 
-// "WiFiManager" (https://github.com/tzapu/WiFiManager)
-// "PubSubClient" (https://github.com/knolleary/pubsubclient)
-// "Adafruit NeoPixel" (https://github.com/adafruit/Adafruit_NeoPixel)
-
-// If the board is started, and a known wifi network is available, it will connect automatically. 
-// If no known network is found, the board will switch to access point mode and a wifi network will be created with the ACCESS_POINT_NAME set below. 
-// Using another device you can then connect to that wifi network using the ACCESS_POINT_PASSWORD set below.
+// If the board is started, and a known wifi connection is available, it will connect automatically. 
+// If no known connection is found the board will switch to access point mode and a wifi network will be created with the ACCESS_POINT_NAME set below. 
+// Using anotherdevice you cna the connect to that wifi connection using the ACCESS_POINT_PASSWORD set below.
 // Your browser will be opened to a configuration page where you can set up the wifi credentials for this board.
 
 
 // ACCESS_POINT_SETUP
 #define ACCESS_POINT_NAME "EnchantedConnection"
-#define ACCESS_POINT_PASSWORD "S3tMeUpNow"
+#define ACCESS_POINT_PASSWORD "passwordHere"
 
  /* 
  * Copyright 2016 IBM Corp.
@@ -60,11 +56,12 @@ By Andy Stanford-Clark - with embellishments by Lucy Rogers and a simple additio
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // update this with the Broker address from IBM Watson IoT Platform
-#define BROKER "{org_id}.messaging.internetofthings.ibmcloud.com"
+#define BROKER "v4sxgx.messaging.internetofthings.ibmcloud.com"
 // update this with the Client ID in the format d:{org_id}:{device_type}:{device_id}
-#define CLIENTID "d:{org_id}:{device_type}:{device_id}"
+// eg d:et6ddf:Wemos:WemosDoorKnob
+#define CLIENTID ""
 // update this with the authentcation token
-#define PASSWORD "****"
+#define PASSWORD ""
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -257,8 +254,3 @@ void loop() {
   // service the MQTT client
   client.loop();
 }
-
-
-
-
-
