@@ -13,9 +13,6 @@ Edited for the Eaglelabs sessions by Jon Paterson */
 #define ACCESS_POINT_NAME "EnchantedConnection"
 #define ACCESS_POINT_PASSWORD "passwordHere"
 
-//reset settings - for testing
-//wifiManager.resetSettings();
-
  /* 
  * Copyright 2016 IBM Corp.
  *
@@ -87,6 +84,8 @@ void setup_wifi() {
   
   WiFiManager wifiManager;
   wifiManager.autoConnect("Coathook#");
+//reset settings - for testing
+//wifiManager.resetSettings();
   
   wait_for_wifi();
   wifiManager.setTimeout(60);
