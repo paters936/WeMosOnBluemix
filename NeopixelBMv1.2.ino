@@ -1,34 +1,18 @@
 /* 
 Neopixels on WeMos using IBM Bluemix By Andy Stanford-Clark - with embellishments by Lucy Rogers and a simple addition of Wifi connection Management by Tim Minter 
-Edited for the Eaglelabs sessions by Jon Paterson */
+Edited for the Eaglelabs sessions by Jon Paterson 
 
-// You will need to install the "WiFiManager" library by Tzapu via Library Manager.
-// If the board is started, and a known wifi connection is available, it will connect automatically. 
-// If no known connection is found the board will switch to access point mode and a wifi network will be created with the ACCESS_POINT_NAME set below. 
-// Using anotherdevice you cna the connect to that wifi connection using the ACCESS_POINT_PASSWORD set below.
-// Your browser will be opened to a configuration page where you can set up the wifi credentials for this board.
-// set time out to 60 sec if wrong password or wrong account connected
+ * Copyright 2016 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at apache.org/licenses/LICEN… Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+*/
 
 // ACCESS_POINT_SETUP
 #define ACCESS_POINT_NAME "EnchantedConnection"
 #define ACCESS_POINT_PASSWORD "passwordHere"
-
- /* 
- * Copyright 2016 IBM Corp.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * apache.org/licenses/LICEN…
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
-
+// LIB
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <Adafruit_NeoPixel.h>
@@ -36,70 +20,67 @@ Edited for the Eaglelabs sessions by Jon Paterson */
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 
-// remember to change MQTT_KEEPALIVE to 60 in the header file {arduino installation}/libraries/PubSubClient/src/PubsSubClient.h
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // update this with the Broker address from IBM Watson IoT Platform
+
 #define BROKER "Changeme.messaging.internetofthings.ibmcloud.com"
+
 // update this with the Client ID in the format d:{org_id}:{device_type}:{device_id}
-// eg d:et6ddf:Wemos:WemosDoorKnob
+
 #define CLIENTID "d:Changeme:WEMOS:Coathook"
+
 // update this with the authentcation token
-#define PASSWORD "Changeme"
+
+#define PASSWORD "Authentcation token goes here"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-// subscribe to this for commands:
+
 #define COMMAND_TOPIC "iot-2/cmd/command/fmt/text"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 Adafruit_NeoPixel pixel = Adafruit_NeoPixel(2, 4);
-
-static uint32_t wifi_colour = pixel.Color(128, 0, 128); // magenta
-// flashes this colour when connecting to MQTT:
-static uint32_t mqtt_colour = pixel.Color(0, 128, 128); // cyan
-static uint32_t current_colour = 0x000000; // black
+static uint32_t wifi_colour = pixel.Color(128, 0, 128);
+static uint32_t mqtt_colour = pixel.Color(0, 128, 128);
+static uint32_t current_colour = 0x000000;
 static uint32_t current_LED = current_colour;
 
 void setup() {
-  
   Serial.begin(9600);
   pixel.begin();
   pixel.show(); // Initialize all pixels to 'off'
   setup_wifi();
   client.setServer(BROKER, 1883);
   client.setCallback(callback);
-  
 }
 
-
 void setup_wifi() {
-  set_pixels(wifi_colour); 
-  
-  // Start by connecting to the WiFi network   
+  set_pixels(wifi_colour);   
   Serial.println();
   Serial.print("Connecting to wifi or setting up access point");
+/////////////////////////////////////////////////////////////////////////////////////////////
   
   WiFiManager wifiManager;
   wifiManager.autoConnect("Coathook#");
-//reset settings - for testing
-//wifiManager.resetSettings();
+  
+/////////////////////////////////////////////////////////////////////////////////////////////
+ 
+  //reset settings - This is for engineers on the day to be able to remove the settings stored if issues.
+  // un// the code below flash the device and then // and flash again.
+  
+  //wifiManager.resetSettings();
   
   wait_for_wifi();
   wifiManager.setTimeout(60);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-  
 }
-
 
 void callback(char* topic, byte* payload, unsigned int length) {
   char content[10];
-  
   Serial.print("Message arrived: ");
-
   if (length != 7)
   {
     Serial.print("expected 7 bytes, got ");
