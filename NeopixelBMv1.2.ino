@@ -41,12 +41,12 @@ Edited for the Eaglelabs sessions by Jon Paterson */
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // update this with the Broker address from IBM Watson IoT Platform
-#define BROKER "v4sxgx.messaging.internetofthings.ibmcloud.com"
+#define BROKER "Changeme.messaging.internetofthings.ibmcloud.com"
 // update this with the Client ID in the format d:{org_id}:{device_type}:{device_id}
 // eg d:et6ddf:Wemos:WemosDoorKnob
-#define CLIENTID "d:et6ddf:Wemos:WemosDoorKnob"
+#define CLIENTID "d:Changeme:WEMOS:Coathook"
 // update this with the authentcation token
-#define PASSWORD "111111111111111"
+#define PASSWORD "Changeme"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
