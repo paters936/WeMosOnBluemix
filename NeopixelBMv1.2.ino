@@ -41,7 +41,7 @@ Edited for the Eaglelabs sessions by Jon Paterson
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-Adafruit_NeoPixel pixel = Adafruit_NeoPixel(2, 4);
+Adafruit_NeoPixel pixel = Adafruit_NeoPixel(8, 4);
 static uint32_t wifi_colour = pixel.Color(128, 0, 128);
 static uint32_t mqtt_colour = pixel.Color(0, 128, 128);
 static uint32_t current_colour = 0x000000;
